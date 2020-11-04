@@ -1,6 +1,6 @@
 #!/bin/bash
 # Clearing cache script written by iiBastos
-# Twitter: @BastosTech
+# Twitter: @BastosTech  
 
 
 RED="\e[31m"
