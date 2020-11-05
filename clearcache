@@ -12,7 +12,7 @@ END="\e[0m"
 
 CheckRoot () {
 
-	if [ $(whoami) != root ] 
+	if [ "$(whoami)" != root ] 
 	then
 		echo -e """["$ORANGE"WARN"$END"] Please run as root! \n"""
 		exit
@@ -24,10 +24,10 @@ CheckRoot () {
 Banner() {
 
 	msg="""## "$GREEN"Clear"$END" "$ORANGE"Cache"$END" "$RED"Memory"$END" ##"""
-        edge="########################"
-        echo "$edge"
-        echo -e "$msg"
-        echo "$edge"
+    edge="########################"
+    echo "$edge"
+    echo -e "$msg"
+    echo "$edge"
 	
 }
 
@@ -36,13 +36,14 @@ Time () {
 
 	if [[ -z ${1} || ${1} -lt 60 ]]
 	then
-        	min=0 ; secs="${1}"
-        else
-        	time_mins=$(echo "scale=2; ${1}/60" | bc)
-        	min=$(echo ${time_mins} | cut -d'.' -f1)
-        	secs="0.$(echo ${time_mins} | cut -d'.' -f2)"
-        	secs=$(echo ${secs} * 60 | bc | awk '{print int($1+0.5)}')
-    	fi
+    	min=0 ; secs="${1}"
+    else
+    	time_mins=$(echo "scale=2; ${1}/60" | bc)
+    	min=$(echo "${time_mins}" | cut -d'.' -f1)
+    	secs="0.$(echo "${time_mins}" | cut -d'.' -f2)"
+    	secs=$(echo "${secs}" * 60 | bc | awk '{print int($1+0.5)}')
+	fi
+
         echo -e """Time Elapsed : "$ORANGE"${min}m"$END" "$RED"${secs}s"$END""""
 
 }
@@ -52,12 +53,12 @@ Total () {
 
 	TOTAL=$(free --giga | sed -n '2p' | awk '{print$2}')
 	# Check to display total memory by MB or GB
-        if [ "$TOTAL" -eq 0 ]
-        then
-                echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"MB"$END" """
+    if [ "$TOTAL" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"MB"$END" """
 	else
-	        echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"GB"$END" """
-        fi
+	    echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
 
 }
 
@@ -65,12 +66,12 @@ Used () {
 
 	USED=$(free --giga | sed -n '2p' | awk '{print$3}')
 	# Check to display used memory by MB or GB
-        if [ "$USED" -eq 0 ]
-        then
-                echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$3}')""$END"""" && echo """ "$RED"MB"$END" """
+    if [ "$USED" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$3}')""$END"""" && echo """ "$RED"MB"$END" """
 	else
 		echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$3}')""$END"""" && echo """ "$RED"GB"$END" """
-        fi
+    fi
 
 }
 
@@ -78,24 +79,25 @@ Free () {
 
 	FREE=$(free --giga | sed -n '2p' | awk '{print$4}')
 	# Check to display free memory usage by MB or GB
-        if [ "$FREE" -eq 0 ]
-        then
-                echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$4}')""$END"""" && echo """ "$RED"MB"$END" """
+    if [ "$FREE" -eq 0 ]
+    then        
+		echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$4}')""$END"""" && echo """ "$RED"MB"$END" """
 	else
 		echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$4}')""$END"""" && echo """ "$RED"GB"$END" """
-        fi
+    fi
+
 }
 
 Cache() {
 
 	CACHE=$(free --giga | sed -n '2p' | awk '{print$6}')
 	# Check to display cache memory usage by MB or GB
-        if [ "$CACHE" -eq 0 ]
-        then
-                echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$6}')""$END"""" && echo """ "$RED"MB"$END" """
+    if [ "$CACHE" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$6}')""$END"""" && echo """ "$RED"MB"$END" """
 	else
 		echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$6}')""$END"""" && echo """ "$RED"GB"$END" """
-        fi
+    fi
 
 }
 
@@ -131,6 +133,6 @@ Start=$(date +%s)
 Main
 
 # Print command time execution
-Time "$(($(date +%s) - ${Start}))"
+Time "$(($(date +%s) - $Start))"
 
 echo ""
