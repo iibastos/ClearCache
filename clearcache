@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+# Clearing cache script written by iiBastos
+# Twitter: @BastosTech  
+
+
+RED="\e[31m"
+GREEN="\e[32m"
+BLUE="\e[34m"
+ORANGE="\e[33m"
+END="\e[0m"
+
+
+CheckRoot () {
+
+	if [ "$(whoami)" != root ] 
+	then
+		echo -e """["$ORANGE"WARN"$END"] Please run as root! \n"""
+		exit
+	fi
+
+}
+
+
+Banner() {
+
+	msg="""## "$GREEN"Clear"$END" "$ORANGE"Cache"$END" "$RED"Memory"$END" ##"""
+    edge="########################"
+    echo "$edge"
+    echo -e "$msg"
+    echo "$edge"
+	
+}
+
+
+Time () {
+
+	if [[ -z ${1} || ${1} -lt 60 ]]
+	then
+    	min=0 ; secs="${1}"
+    else
+    	time_mins=$(echo "scale=2; ${1}/60" | bc)
+    	min=$(echo "${time_mins}" | cut -d'.' -f1)
+    	secs="0.$(echo "${time_mins}" | cut -d'.' -f2)"
+    	secs=$(echo "${secs}" * 60 | bc | awk '{print int($1+0.5)}')
+	fi
+
+        echo -e """Time Elapsed : "$ORANGE"${min}m"$END" "$RED"${secs}s"$END""""
+
+}
+
+
+Total () {
+
+	TOTAL=$(free --giga | sed -n '2p' | awk '{print$2}')
+	# Check to display total memory by MB or GB
+    if [ "$TOTAL" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"MB"$END" """
+	else
+	    echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$2}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
+
+}
+
+Used () {
+
+	USED=$(free --giga | sed -n '2p' | awk '{print$3}')
+	# Check to display used memory by MB or GB
+    if [ "$USED" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$3}')""$END"""" && echo """ "$RED"MB"$END" """
+	else
+		echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$3}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
+
+}
+
+Free () {
+
+	FREE=$(free --giga | sed -n '2p' | awk '{print$4}')
+	# Check to display free memory usage by MB or GB
+    if [ "$FREE" -eq 0 ]
+    then        
+		echo -n """"$ORANGE""$(free --mega | sed -n '2p' | awk '{print$4}')""$END"""" && echo """ "$RED"MB"$END" """
+	else
+		echo -n """"$ORANGE""$(free --giga | sed -n '2p' | awk '{print$4}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
+
+}
+
+Cache() {
+
+	CACHE=$(free --giga -w | sed -n '2p' | awk '{print$7}')
+	# Check to display cache memory usage by MB or GB
+    if [ "$CACHE" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega -w | sed -n '2p' | awk '{print$7}')""$END"""" && echo """ "$RED"MB"$END" """
+	else
+		echo -n """"$ORANGE""$(free --giga -w | sed -n '2p' | awk '{print$7}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
+
+}
+
+Buffer() {
+
+	BUFFER=$(free --giga -w | sed -n '2p' | awk '{print$6}')
+	# Check to display buffer memory usage by MB or GB
+    if [ "$BUFFER" -eq 0 ]
+    then
+        echo -n """"$ORANGE""$(free --mega -w | sed -n '2p' | awk '{print$6}')""$END"""" && echo """ "$RED"MB"$END" """
+	else
+		echo -n """"$ORANGE""$(free --giga -w | sed -n '2p' | awk '{print$6}')""$END"""" && echo """ "$RED"GB"$END" """
+    fi
+
+}
+
+
+
+Main () {
+
+	echo ""
+	echo -e """["$BLUE"INFO"$END"] Total Memory  : $(Total)"""
+	echo -e """["$BLUE"INFO"$END"] Used Memory   : $(Used)"""
+	echo -e """["$BLUE"INFO"$END"] Free Memory   : $(Free)"""
+	echo -e """["$BLUE"INFO"$END"] Cache Memory  : $(Cache)"""
+	echo -e """["$BLUE"INFO"$END"] Buffer Memory : $(Buffer)"""
+	echo ""
+	echo -n "Clearing cache"
+	#sync; echo 1 > /proc/sys/vm/drop_caches && echo -n "."
+	#sync; echo 2 > /proc/sys/vm/drop_caches && echo -n "."
+	sync; echo 3 > /proc/sys/vm/drop_caches #&& echo -n "."
+	echo -e """ ["$GREEN"DONE"$END"]"""
+
+}
+
+
+echo ""
+
+# Check root execution
+CheckRoot
+
+# Print banner
+Banner 
+
+# To show command excution time
+Start=$(date +%s)
+
+# Start the main program
+Main
+
+# Print command time execution
+Time "$(($(date +%s) - $Start))"
+
+echo ""
